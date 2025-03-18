@@ -1,9 +1,12 @@
 @import "tailwindcss";
 
-
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.radix-themes {
+  --default-font-family: var(--font-inter);
 }
 
 @theme inline {
