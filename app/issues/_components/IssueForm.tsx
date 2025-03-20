@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { set, z } from "zod";
+import { z } from "zod";
 
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -59,7 +59,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
               router.refresh()
             } catch (error) {
               setIsSubmitting(false);
-              setError("Something unexpected happened!");
+              setError(`Something unexpected happened! ${error}`);
             }
           }
         })}

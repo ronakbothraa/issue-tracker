@@ -1,8 +1,7 @@
-import { Heading, Flex, Card, Text } from "@radix-ui/themes";
+import { Flex, Card } from "@radix-ui/themes";
 import React from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 import Skeleton from "react-loading-skeleton";
-import delay from "delay";
 
 const loading = () => {
   return (
