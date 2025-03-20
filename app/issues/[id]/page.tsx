@@ -1,6 +1,7 @@
 import IssueStatusBadge from "@/app/components/IssueStatusBadge";
 import { prisma } from "@/prisma/client";
 import { Card, Flex, Heading, Text } from "@radix-ui/themes";
+import delay from "delay";
 import { notFound } from "next/navigation";
 import React from "react";
 import ReactMarkdown from "react-markdown";
@@ -10,6 +11,7 @@ interface Props {
 }
 
 const IssueDetailPage = async ({ params }: Props) => {
+  await delay(1000);
   function isNumeric(value: any) {
     return /^-?\d+$/.test(value);
   }
@@ -32,7 +34,7 @@ const IssueDetailPage = async ({ params }: Props) => {
         <IssueStatusBadge status={issue.status} />
         <Text>{issue.createdAt.toDateString()}</Text>
       </Flex>
-      <Card className="prose" mt="4">
+      <Card className="prose" mt="6">
         <ReactMarkdown>{issue.description}</ReactMarkdown>
       </Card>
     </div>
