@@ -8,6 +8,7 @@ import { useSession } from "next-auth/react";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   DropdownMenu,
   Flex,
@@ -70,7 +71,9 @@ const NavBar = () => {
                 </DropdownMenu.Content>
               </DropdownMenu.Root>
             ) : (
-              <Link href="/api/auth/signin">Sign in</Link>
+              <Button size="2" variant="solid" color="crimson">
+                <Link href="/api/auth/signin">Sign in</Link>
+              </Button>
             )}
           </Box>
         </Flex>
