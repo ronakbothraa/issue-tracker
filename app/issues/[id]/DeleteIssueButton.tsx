@@ -1,19 +1,29 @@
-'use client';
+"use client";
 
 import { AlertDialog, Button, Flex, Spinner } from "@radix-ui/themes";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { set } from "zod";
+import { useState } from "react";
 
 const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
-    const [isDeleting, setIsDeleting] = useState(false)
-    const router = useRouter();
+  const [isDeleting, setIsDeleting] = useState(false);
+  const router = useRouter();
 
-    return (
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true);
+      await axios.delete(`/api/issues/${issueId}`);
+      router.push("/issues");
+    } catch (error) {
+      setIsDeleting(false);
+      console.log(error);
+    }
+  };
+
+  return (
     <AlertDialog.Root>
       <AlertDialog.Trigger>
-        <Button color="red">Delete Issue</Button>
+        <Button disabled={isDeleting} color="red">Delete Issue</Button>
       </AlertDialog.Trigger>
       <AlertDialog.Description>
         <AlertDialog.Content>
@@ -26,20 +36,18 @@ const DeleteIssueButton = ({ issueId }: { issueId: number }) => {
           </AlertDialog.Description>
           <Flex mt="4" gap="3">
             <AlertDialog.Cancel>
-              <Button variant="soft" color="gray">Cancel</Button>
+              <Button variant="soft" color="gray">
+                Cancel
+              </Button>
             </AlertDialog.Cancel>
             <AlertDialog.Action>
-              <Button disabled={isDeleting} color="red" onClick={async () => {
-                try {
-                    setIsDeleting(true);
-                    await axios.delete(`/api/issues/${issueId}`)
-                    router.push("/issues")
-                } catch (error) {
-                    setIsDeleting(false);
-                    console.log(error)
-                }
-                ;
-              }}>{isDeleting && <Spinner />} Delete</Button>
+              <Button
+                disabled={isDeleting}
+                color="red"
+                onClick={handleDelete}
+              >
+                {isDeleting && <Spinner />} Delete
+              </Button>
             </AlertDialog.Action>
           </Flex>
         </AlertDialog.Content>
