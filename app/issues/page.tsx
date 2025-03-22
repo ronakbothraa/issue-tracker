@@ -3,9 +3,21 @@ import { Table } from "@radix-ui/themes";
 import { prisma } from "@/prisma/client";
 import { Link, IssueStatusBadge } from "@/app/components";
 import IssueActions from "./IssueActions";
+import { Status } from "@prisma/client";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+const IssuesPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<{ status: Status }>;
+}) => {
+  const { status } = await searchParams;
+  
+  
+  const issues = await prisma.issue.findMany({
+    where: {
+      status: Object.values(Status).includes(status) ? status : undefined,
+    }
+  });
   return (
     <div>
       <IssueActions />
@@ -44,7 +56,6 @@ const IssuesPage = async () => {
   );
 };
 
-export const dynamic = 'force-dynamic'
+export const dynamic = "force-dynamic";
 
 export default IssuesPage;
- 
