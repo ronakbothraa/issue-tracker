@@ -6,15 +6,13 @@ import NextLink from "next/link";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
 
-const IssuesPage = async ({
-  searchParams,
-}: {
-  searchParams: Promise<{
-    status: Status;
-    orderBy: keyof Issue;
-    sortOrder?: "asc" | "desc";
-  }>;
-}) => {
+interface Props {
+  status: Status;
+  orderBy: keyof Issue;
+  sortOrder?: "asc" | "desc";
+}
+
+const IssuesPage = async ({ searchParams }: { searchParams: Promise<Props> }) => {
   const columns: {
     label: string;
     value: keyof Issue;
@@ -27,10 +25,10 @@ const IssuesPage = async ({
 
   const SearchParams = await searchParams;
   const { status } = SearchParams;
-  if (SearchParams.orderBy === undefined) {
+
+  if (!SearchParams.orderBy) {
     SearchParams.orderBy = "createdAt";
   }
-
   const sortOrder = SearchParams.sortOrder || "asc";
 
   const issues = await prisma.issue.findMany({
@@ -41,6 +39,7 @@ const IssuesPage = async ({
       [SearchParams.orderBy]: sortOrder,
     },
   });
+  
   return (
     <div>
       <IssueActions />
