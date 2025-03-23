@@ -5,11 +5,13 @@ import { Link, IssueStatusBadge } from "@/app/components";
 import NextLink from "next/link";
 import IssueActions from "./IssueActions";
 import { Issue, Status } from "@prisma/client";
+import Pagination from "../components/Pagination";
 
 interface Props {
   status: Status;
   orderBy: keyof Issue;
   sortOrder?: "asc" | "desc";
+  page: string;
 }
 
 const IssuesPage = async ({
@@ -29,6 +31,9 @@ const IssuesPage = async ({
 
   const SearchParams = await searchParams;
   const { status } = SearchParams;
+  const statusFilter = {
+    status: Object.values(Status).includes(status) ? status : undefined,
+  }
 
   if (
     !SearchParams.orderBy ||
@@ -43,14 +48,18 @@ const IssuesPage = async ({
     SearchParams.sortOrder = "asc";
   }
 
+  const page = parseInt(SearchParams.page) || 1;
+  const pageSize = 10;
+
   const issues = await prisma.issue.findMany({
-    where: {
-      status: Object.values(Status).includes(status) ? status : undefined,
-    },
+    where: statusFilter,
     orderBy: {
       [SearchParams.orderBy]: SearchParams.sortOrder,
     },
+    skip: (page - 1) * pageSize,
+    take: pageSize,
   });
+  const issueCount = await prisma.issue.count({ where: statusFilter });
 
   return (
     <div>
@@ -103,6 +112,10 @@ const IssuesPage = async ({
           ))}
         </Table.Body>
       </Table.Root>
+      <Pagination
+        itemCount={issueCount}
+        pageSize={pageSize}
+        currentPage={page} />
     </div>
   );
 };
