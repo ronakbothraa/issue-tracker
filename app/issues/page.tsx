@@ -12,7 +12,11 @@ interface Props {
   sortOrder?: "asc" | "desc";
 }
 
-const IssuesPage = async ({ searchParams }: { searchParams: Promise<Props> }) => {
+const IssuesPage = async ({
+  searchParams,
+}: {
+  searchParams: Promise<Props>;
+}) => {
   const columns: {
     label: string;
     value: keyof Issue;
@@ -26,20 +30,28 @@ const IssuesPage = async ({ searchParams }: { searchParams: Promise<Props> }) =>
   const SearchParams = await searchParams;
   const { status } = SearchParams;
 
-  if (!SearchParams.orderBy) {
+  if (
+    !SearchParams.orderBy ||
+    !Object.values(prisma.issue.fields).map((field) => { if (field.name === SearchParams.orderBy)  return true; })
+  ) {
     SearchParams.orderBy = "createdAt";
   }
-  const sortOrder = SearchParams.sortOrder || "asc";
+  if (
+    !SearchParams.sortOrder ||
+    !Object.values(["asc", "desc"]).includes(SearchParams.sortOrder)
+  ) {
+    SearchParams.sortOrder = "asc";
+  }
 
   const issues = await prisma.issue.findMany({
     where: {
       status: Object.values(Status).includes(status) ? status : undefined,
     },
     orderBy: {
-      [SearchParams.orderBy]: sortOrder,
+      [SearchParams.orderBy]: SearchParams.sortOrder,
     },
   });
-  
+
   return (
     <div>
       <IssueActions />
@@ -58,7 +70,7 @@ const IssuesPage = async ({ searchParams }: { searchParams: Promise<Props> }) =>
                       orderBy: column.value,
                       sortOrder:
                         SearchParams.orderBy === column.value &&
-                        sortOrder === "asc"
+                        SearchParams.sortOrder === "asc"
                           ? "desc"
                           : "asc",
                     },
@@ -66,7 +78,7 @@ const IssuesPage = async ({ searchParams }: { searchParams: Promise<Props> }) =>
                 >
                   {column.label}{" "}
                   {column.value === SearchParams.orderBy &&
-                    (sortOrder === "asc" ? "🔽" : "🔼")}
+                    (SearchParams.sortOrder === "asc" ? "🔽" : "🔼")}
                 </NextLink>
               </Table.ColumnHeaderCell>
             ))}
