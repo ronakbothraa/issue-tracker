@@ -5,7 +5,17 @@ import { issueSchema } from "@/app/validationSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
 import { Pencil2Icon } from "@radix-ui/react-icons";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import {
+  Badge,
+  Box,
+  Button,
+  Callout,
+  Card,
+  Flex,
+  RadioCards,
+  Select,
+  TextField,
+} from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
 import dynamic from "next/dynamic";
@@ -44,6 +54,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         className="space-y-3"
         onSubmit={handleSubmit(async (data) => {
           if (issue?.id) {
+            console.log(data);
             try {
               setIsSubmitting(true);
               await axios.patch(`/api/issues/${issue?.id}`, data);
@@ -56,7 +67,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
               setIsSubmitting(true);
               await axios.post("/api/issues", data);
               router.push("/issues");
-              router.refresh()
+              router.refresh();
             } catch (error) {
               setIsSubmitting(false);
               setError(`Something unexpected happened! ${error}`);
@@ -79,8 +90,31 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
           )}
         />
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
+
+        <Controller
+          name="status"
+          control={control}
+          defaultValue={issue?.status}
+          render={({ field }) => (
+            <Select.Root value={field.value} onValueChange={field.onChange}>
+              <Select.Trigger placeholder="Update status" />
+              <Select.Content>
+                <Select.Item value="OPEN">OPEN</Select.Item>
+                <Select.Item value="CLOSED">CLOSED</Select.Item>
+                <Select.Item value="IN_PROGRESS">IN PROGRESS</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          )}
+        />
+
         <Button disabled={isSubmitting}>
-          {issue?.id ? (<><Pencil2Icon /> Save Edit</>) : "Submit New Issue"}
+          {issue?.id ? (
+            <>
+              <Pencil2Icon /> Save Edit
+            </>
+          ) : (
+            "Submit New Issue"
+          )}
           {isSubmitting && <Spinner />}
         </Button>
       </form>

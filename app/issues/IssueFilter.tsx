@@ -24,7 +24,6 @@ const IssueFilter = () => {
         const query = params.size ? `?${params.toString()}` : '';
         console.log("Client-side: Setting URL to:", `/issues${query}`);
         router.push(`/issues${query}`);
-
     }}>
       <Select.Trigger placeholder="Filter by status" />
       <Select.Content>
