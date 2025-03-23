@@ -12,7 +12,7 @@ const IssueStatusBadge = ({ status }: { status: Status }) => {
     IN_PROGRESS: { label: "In Progress", color: "violet" },
   };
   return (
-<Badge color={statusMap[status].color} className="text-xs">
+    <Badge color={statusMap[status].color} size="3">
       {statusMap[status].label}
     </Badge>
   );

@@ -8,6 +8,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+
   const session = await getServerSession(authOptions)
 
   if (!session) {
@@ -16,6 +17,7 @@ export async function PATCH(
   
   const { id } = await params;
   const body = await request.json();
+  
   const validation = patchIssueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json(validation.error.format(), { status: 400 });
@@ -28,7 +30,6 @@ export async function PATCH(
     if (!user) {
       return NextResponse.json({ error: "Invalid user" }, { status: 400 });
     }
-    
   }
 
   const issue = await prisma.issue.findUnique({
@@ -47,6 +48,7 @@ export async function PATCH(
       title: body.title,
       description: body.description,
       assignedToUserID: body.assignedToUserID,
+      status: body.status || issue.status,
     },
   });
 
