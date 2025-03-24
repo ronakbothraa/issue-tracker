@@ -6,15 +6,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Issue } from "@prisma/client";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import {
-  Badge,
-  Box,
   Button,
   Callout,
-  Card,
-  Flex,
-  RadioCards,
   Select,
-  TextField,
+  TextField
 } from "@radix-ui/themes";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";

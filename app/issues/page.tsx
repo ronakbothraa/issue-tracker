@@ -1,11 +1,10 @@
-import React from "react";
 import { prisma } from "@/prisma/client";
-import IssueActions from "./IssueActions";
-import { Issue, Status } from "@prisma/client";
-import Pagination from "../components/Pagination";
-import IssueTables, { IssueQuery } from "./IssueTables";
+import { Status } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
 import { Metadata } from "next";
+import Pagination from "../components/Pagination";
+import IssueActions from "./IssueActions";
+import IssueTables, { IssueQuery } from "./IssueTables";
 
 const IssuesPage = async ({
   searchParams,

@@ -8,6 +8,10 @@ import { useState } from "react";
 import toast, { Toaster } from 'react-hot-toast';
 
 const AssigneeSelect = ({ issue }: { issue: Issue }) => {
+  
+  const router = useRouter();
+  const [assignedUser, setAssignedUser] = useState(issue.assignedToUserID);
+
   const {
     data: users,
     error,
@@ -21,9 +25,6 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
 
   if (error) return null;
 
-  const router = useRouter();
-
-  const [assignedUser, setAssignedUser] = useState(issue.assignedToUserID);
 
   const handleUserAssign = async (userId: string) => {
     try {
